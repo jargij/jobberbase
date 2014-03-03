@@ -1,0 +1,106 @@
+                      3370024717a:28:{s:7:"alljobs";a:2:{s:8:"all_jobs";s:8:"All jobs";s:7:"no_jobs";s:36:"The are currently no available jobs.";}s:5:"apply";a:19:{s:13:"apply_message";s:17:"&raquo; Apply now";s:6:"cancel";s:6:"cancel";s:8:"cv_error";s:35:"Resume/CV size can be maximum 3 MB.";s:7:"cv_info";s:52:"Max. 3 MB. Recommended formats: PDF, RTF, DOC, ODT. ";s:8:"cv_label";s:16:"Upload resume/CV";s:11:"email_error";s:25:"Please enter your e-mail.";s:13:"email_invalid";s:29:"The E-mail address is invalid";s:11:"email_label";s:11:"Your e-mail";s:30:"error_apply_timeout_not_passed";s:87:"Your application was not sent because {0} minutes must pass before you can apply again.";s:18:"error_sending_mail";s:60:"There was an error sending your application to the employer.";s:24:"errro_apply_data_invalid";s:73:"Your application form contains errors. Please correct them and try again.";s:13:"message_label";s:35:"Message<br />or letter of intention";s:9:"msg_error";s:23:"Please enter a message.";s:10:"name_error";s:23:"Please enter your name.";s:10:"name_label";s:9:"Your name";s:6:"old_ad";s:48:"This job ad has been posted over {0} days ago...";s:2:"or";s:2:"or";s:6:"submit";s:19:"Send my application";s:7:"success";s:69:"Congratulations, your application has been sent! Best of luck to you!";}s:7:"captcha";a:2:{s:13:"captcha_error";s:15:"Incorrect code.";s:13:"captcha_title";s:9:"Anti-spam";}s:8:"category";a:4:{s:12:"display_only";s:12:"Only display";s:8:"jobs_for";s:8:"Jobs for";s:11:"title_part1";s:19:"Are you looking for";s:11:"title_part2";s:5:"jobs?";}s:9:"companies";a:8:{s:15:"are_you_looking";s:27:"Are you looking for jobs at";s:9:"companies";s:9:"companies";s:7:"jobs_at";s:7:"Jobs at";s:10:"meta_part1";s:15:"Job postings by";s:10:"meta_part2";s:14:"Free jobs ads!";s:10:"page_title";s:28:"Companies who published here";s:5:"title";s:29:"Companies that published here";s:5:"total";s:5:"Total";}s:7:"contact";a:8:{s:11:"email_error";s:36:"You must fill in your E-mail address";s:11:"email_label";s:11:"Your e-mail";s:13:"message_label";s:7:"Message";s:9:"msg_error";s:24:"Please fill in a message";s:10:"name_error";s:24:"Please fill in your name";s:10:"name_label";s:9:"Your name";s:10:"send_error";s:42:"Your message could not be sent. Try again?";s:6:"submit";s:12:"Send message";}s:17:"email_ApplyOnline";a:2:{s:7:"message";s:53:"---
+This e-mail is an application sent from {JOB_URL}";s:7:"subject";s:47:"[ {SITE_NAME} ] I wish to apply for {JOB_TITLE}";}s:13:"email_Contact";a:2:{s:7:"message";s:90:"---
+ Sent by: {SENDER_NAME} <{SENDER_EMAIL}>
+				
+ IP: {SENDER_IP}
+				
+ Date: {SEND_DATE}";s:7:"subject";s:21:"[{SITE_NAME}] contact";}s:26:"email_PublishPendingToUser";a:2:{s:7:"message";s:412:"Hello! :)
+
+
+				We apologize for the inconvenience, but since this is the first time you post with this e-mail address, we need to manually verify it.
+				
+Thank you for your patience, as the ad should be published ASAP. We'll send you an e-mail when that happens!
+				
+
+From now on, every ad you post with this e-mail address will instantly be published.
+				
+
+---
+Thank you for using our service!
+				
+The Team";s:7:"subject";s:22:"Your ad on {SITE_NAME}";}s:20:"email_PublishToAdmin";a:2:{s:7:"message";s:261:"{JOB_URL}
+				
+ {JOB_TITLE} at {JOB_COMPANY}
+				
+ {JOB_DESCRIPTION}
+				
+ URL: {JOB_URL}
+				
+---
+ Published by: {JOB_POSTER_EMAIL}
+				
+---
+ Edit: {JOB_EDIT_URL}
+				
+ Deactivate: {JOB_DEACTIVATE_URL}
+				
+
+---
+ IP: {JOB_POSTER_IP}
+				
+ Date: {JOB_POST_DATE}";s:7:"subject";s:37:"[ {SITE_NAME}  ] New job: {JOB_TITLE}";}s:30:"email_PublishToAdmin_firstPost";a:2:{s:7:"message";s:308:"Activate ad {JOB_ACTIVATE_URL}
+
+			
+		
+			
+				{JOB_URL}
+				
+ {JOB_TITLE} at {JOB_COMPANY}
+				
+ {JOB_DESCRIPTION}
+				
+ URL: {JOB_URL}
+				
+---
+ Published by: {JOB_POSTER_EMAIL}
+				
+---
+ Edit: {JOB_EDIT_URL}
+				
+ Deactivate: {JOB_DEACTIVATE_URL}
+				
+
+---
+ IP: {JOB_POSTER_IP}
+				
+ Date: {JOB_POST_DATE}";s:7:"subject";s:37:"[ {SITE_NAME}  ] New job: {JOB_TITLE}";}s:19:"email_PublishToUser";a:2:{s:7:"message";s:212:"Hello! :)
+
+
+				Your ad was published and is available at {JOB_URL}
+				
+
+---
+Edit it: {JOB_EDIT_URL}
+				
+Deactivate it: {JOB_DEACTIVATE_URL}
+				
+
+---
+Thank you for using our service!
+				
+ The {SITE_NAME} Team";s:7:"subject";s:36:"Your ad on {SITE_NAME} was published";}s:16:"email_ReportSpam";a:2:{s:7:"message";s:292:"Following ad was reported as false/spam: 
+---
+
+
+				{JOB_URL}
+				
+
+ {JOB_TITLE} at {JOB_COMPANY}
+				
+
+ {JOB_DESCRIPTION}
+				
+
+---
+ Published by: {JOB_POSTER_EMAIL}
+				
+---
+Edit: {JOB_EDIT_URL}
+				
+ Deactivate: {JOB_DEACTIVATE_URL}
+				
+---
+IP: {JOB_POSTER_IP}
+				
+ Date: {JOB_POST_DATE}";s:7:"subject";s:33:"[SPAM on {SITE_NAME}] {JOB_TITLE}";}s:18:"email_SendToFriend";a:2:{s:7:"message";s:49:"---
+You've received this e-mail from {YOUR_EMAIL}";s:7:"subject";s:29:"I'm recommending you a job ad";}s:6:"footer";a:14:{s:6:"cities";s:6:"Cities";s:12:"cities_title";s:6:"Cities";s:11:"column_find";s:13:"Find out more";s:11:"column_misc";s:4:"Misc";s:10:"column_use";s:3:"Use";s:9:"companies";s:9:"Companies";s:15:"companies_title";s:9:"Companies";s:7:"new_job";s:14:"Post a new job";s:13:"new_job_title";s:14:"Post a new job";s:10:"powered_by";s:18:"Proudly powered by";s:3:"rss";s:9:"RSS Feeds";s:9:"rss_title";s:9:"RSS Feeds";s:7:"widgets";s:7:"Widgets";s:13:"widgets_title";s:7:"Widgets";}s:6:"header";a:6:{s:4:"home";s:4:"Home";s:4:"name";s:6:"jobber";s:7:"rss_alt";s:3:"RSS";s:9:"rss_title";s:25:"Subscribe to the RSS feed";s:13:"seen_recently";s:13:"Seen recently";s:5:"title";s:7:"IT jobs";}s:8:"homepage";a:11:{s:9:"applicant";s:9:"applicant";s:10:"applicants";s:10:"applicants";s:2:"at";s:2:"at";s:2:"in";s:2:"in";s:7:"no_jobs";s:12:"No jobs, yet";s:12:"popular_jobs";s:23:"Most applied to IT jobs";s:11:"recent_jobs";s:22:"Most recent job offers";s:11:"sidebar_for";s:3:"for";s:17:"sidebar_totaljobs";s:10:"total jobs";s:14:"spotlight_jobs";s:14:"Spotlight Jobs";s:13:"view_all_jobs";s:16:"View all &raquo;";}s:4:"jobs";a:29:{s:17:"activated_success";s:34:"Job ad was successfully activated.";s:11:"add_success";s:36:"Your job ad was successfully posted!";s:8:"all_jobs";s:16:"View all jobs at";s:13:"company_error";s:26:"Please enter company name.";s:18:"confirmation_error";s:26:"Your job ad was cancelled.";s:20:"confirmation_success";s:26:"Your job ad was published.";s:14:"delete_success";s:24:"Your job ad was deleted.";s:17:"description_error";s:29:"Please enter job description.";s:11:"email_error";s:25:"Please enter your e-mail.";s:13:"email_invalid";s:29:"The E-mail address is invalid";s:10:"html_title";s:16:"{0} at {1} / {2}";s:21:"job_description_error";s:29:"Please enter job description.";s:15:"job_email_error";s:25:"Please enter your e-mail.";s:15:"job_title_error";s:23:"Please enter job title.";s:17:"location_anywhere";s:8:"Anywhere";s:10:"name_error";s:26:"Please enter company name.";s:6:"no_job";s:41:"There are currently no available jobs for";s:12:"no_job_found";s:19:"No jobs were found.";s:14:"preposition_at";s:2:"at";s:12:"published_at";s:16:"Published at {0}";s:15:"publish_success";s:43:"Congratulations, your job ad was published!";s:11:"recent_jobs";s:14:"Recent jobs at";s:11:"report_fake";s:20:"Is this job ad fake?";s:9:"report_it";s:10:"Report it!";s:10:"title_edit";s:16:"Edit your job ad";s:11:"title_error";s:23:"Please enter job title.";s:9:"title_new";s:14:"Post a new job";s:10:"type_error";s:26:"Please enter the job type.";s:6:"viewed";s:17:"Viewed: {0} times";}s:8:"jobscity";a:12:{s:6:"cities";s:6:"cities";s:4:"jobs";s:4:"jobs";s:7:"jobs_at";s:7:"Jobs in";s:7:"jobs_in";s:7:"Jobs in";s:20:"jobs_in_other_cities";s:20:"Jobs in other cities";s:10:"no_jobs_in";s:28:"The are currently no jobs in";s:23:"no_jobs_in_other_cities";s:36:"The are currently no available jobs.";s:12:"other_cities";s:12:"Other cities";s:10:"page_title";s:18:"Overview of cities";s:15:"sidebar_jobs_in";s:2:"in";s:5:"title";s:26:"Cities with jobs available";s:5:"total";s:5:"Total";}s:2:"js";a:7:{s:32:"delete_job_confirmation_question";s:42:"Are you sure you want to delete this post?";s:14:"location_other";s:5:"other";s:23:"location_pick_from_list";s:22:"Pick one from the list";s:22:"report_spam_successful";s:62:"Thank you, your vote was registered and is highly appreciated!";s:24:"report_spam_unsuccessful";s:68:"Thank you for your intention, but your vote could not be registered.";s:25:"send_to_friend_successful";s:64:"Your message was sent. Let's hope it doesn't get marked as spam!";s:27:"send_to_friend_unsuccessful";s:61:"Your message could not be sent. Did you enter both addresses?";}s:8:"notfound";a:2:{s:4:"back";s:19:"Go back to category";s:7:"message";s:66:"We're sorry, but the page you were looking for could not be found.";}s:7:"publish";a:37:{s:12:"apply_online";s:122:"<strong>Allow Online Applications</strong> (If you are unchecking it, then add a description on how to apply online above)";s:7:"company";s:24:"Hiring company or person";s:15:"congratulations";s:42:"Congratulations, your job ad was published";s:10:"deactivate";s:13:"Deactivate ad";s:16:"description_info";s:24:"Format text with Textile";s:17:"description_label";s:11:"Description";s:4:"edit";s:7:"Edit it";s:12:"edit_success";s:35:"Your job ad was edited successfully";s:11:"email_info1";s:13:"not published";s:11:"email_info2";s:49:"Online applications will be sent to this address.";s:11:"email_label";s:6:"E-mail";s:10:"form_error";s:25:"Please revise the form...";s:11:"job_details";s:11:"Job details";s:14:"location_label";s:8:"Location";s:23:"location_pick_from_list";s:22:"Pick one from the list";s:10:"name_label";s:4:"Name";s:12:"options_info";s:66:"If you need to edit or deactivate this ad, use the following links";s:13:"options_title";s:26:"Edit or deactivate your ad";s:5:"other";s:5:"other";s:7:"publish";s:15:"Publish this ad";s:6:"result";s:12:"Final result";s:4:"save";s:12:"Save changes";s:5:"step1";s:13:"Step 1: Write";s:12:"step1_submit";s:17:"Step 2: Verify ad";s:5:"step2";s:14:"Step 2: Verify";s:12:"step2_cancel";s:22:"cancel posting this ad";s:10:"step2_info";s:33:"If you changed your mind, you may";s:5:"step3";s:15:"Step 3: Confirm";s:15:"success_message";s:336:"Your job was posted, but since this is the first time you post with this e-mail address, we need to manually verify it.<br />Thank you for your patience, as the ad should be published ASAP. We'll send you an e-mail when that happens. <br /><br />From now on, every ad you post with this e-mail address will instantly be published.<br />";s:6:"syntax";s:14:"Textile syntax";s:10:"title_info";s:35:"e.g. 'PHP Developer', 'UI designer'";s:11:"title_label";s:5:"Title";s:4:"view";s:19:"View the new job ad";s:13:"websiter_info";s:21:"e.g. 'www.google.com'";s:13:"website_label";s:7:"Website";s:5:"where";s:7:"where ?";s:10:"where_info";s:17:"e.g. 'London, UK'";}s:9:"recommend";a:4:{s:18:"friend_email_label";s:15:"Friend's e-mail";s:6:"submit";s:4:"Send";s:5:"title";s:21:"Recommend to a friend";s:16:"your_email_label";s:11:"Your e-mail";}s:3:"rss";a:4:{s:14:"all_categories";s:27:"Feed for all job categories";s:3:"for";s:8:"Feed for";s:5:"intro";s:34:"Choose one of the following feeds:";s:5:"title";s:3:"RSS";}s:6:"search";a:4:{s:7:"default";s:16:"Search for a job";s:7:"example";s:79:"(e.g. &quot;ajax&quot;, &quot;designer, london&quot;, &quot;php, chicago&quot;)";s:6:"submit";s:14:"Post a new job";s:12:"submit_title";s:14:"Post a new job";}s:7:"sidebar";a:2:{s:10:"menu_title";s:10:"Navigation";s:12:"other_cities";s:12:"Other cities";}s:7:"sitemap";a:4:{s:4:"jobs";s:8:"Jobs for";s:4:"more";s:13:"Find out more";s:5:"title";s:7:"Sitemap";s:3:"use";s:6:"Use it";}s:5:"stats";a:6:{s:7:"average";s:3:"avg";s:13:"last_50_posts";s:38:"Online applications, last 50 displayed";s:16:"last_50_searches";s:32:"Site searches, last 50 displayed";s:11:"last_7_days";s:11:"last 7 days";s:7:"maximum";s:3:"max";s:5:"total";s:5:"total";}}
