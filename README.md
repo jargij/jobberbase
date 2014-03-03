@@ -28,7 +28,7 @@ As an experiment and being influenced by how Ruby on Rails (framework) came out 
 
 Jobberbase was the first open-source job board platform, a breath of fresh air in a world where all other similar software was legacy, ugly and paid-for, thus challenging the status quo.
 
-Over the next few years, Jobberbase gained popularity and a few core contributors, most notably Lavi & Cosmin Mendrea who were also heavily involved in the community, helping everyone out. Other developers started to make a living by customising and extending Jobberbase for their clients. New visual themes were created...
+Over the next few years, Jobberbase gained popularity and a few core contributors, most notably Lavi & Cosmin Mendrea and Radu Lucaciu who were also heavily involved in the community, helping people out. Other developers started to make a living by customising and extending Jobberbase for their clients. New visual themes were created...
 
 Good times!
 
