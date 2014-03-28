@@ -1,7 +1,7 @@
 Jobberbase
 ==========
 
-Jobberbase is an **open-source job board platform** that enables the creation of job sites.
+Jobberbase is an **open-source job board platform** that enables the creation of job sites. 
 
 For comparison, Jobberbase is for job sites what WordPress is for blogs.
 
