@@ -413,9 +413,7 @@ div.footer
 	float:right;
 }
 
-#footer-col1,
-#footer-col2,
-#footer-col3
+.footer-col
 {
 	display:inline;
 	float:left;
@@ -647,7 +645,7 @@ span.la
 	background-color:#09C;
 	border:1px solid #369;
 	color:#fff;
-	cursor:hand;
+	cursor:pointer;
 }
 
 #publish_form input#submit:hover,
@@ -926,25 +924,6 @@ div#sort-by-type a:hover
 .company-tag-6
 {
 	font-size:24px;
-}
-
-#textile-suggestions table
-{
-	font-size:11px;
-	margin-top:5px;
-	width:90%;
-}
-
-#textile-suggestions table th
-{
-	border-bottom:2px solid #bbb;
-	font-weight:bold
-}
-
-#textile-suggestions table td
-{
-	border-bottom:1px solid #ccc;
-	width: 49%
 }
 
 #job-listings .current_page

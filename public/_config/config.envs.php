@@ -6,17 +6,19 @@
 
 // local
 $__instances['local'] = array(
-	// should be a unique part of the url (or the entire url if you wish)
+	// The prefix should be a unique part of the url (not including protocol name or auth info; see below).
 	'prefix' => 'jobberbase.local',
 	// mysql credentials
 	'db_host' => 'localhost',
 	'db_port' => 3306,
 	'db_user' => 'root',
-	'db_password' => '',
+	'db_password' => 'root',
 	'db_name' => 'jobberbase',
 	'db_prefix' => '',
 	// your site's full url
 	'app_url' => 'http://jobberbase.local/',
+	// language to use
+	'lang_code' => 'en',
 	// error reporting
 	'ini_error_reporting' => E_ALL,
 	'ini_display_errors' => 'On',
@@ -38,6 +40,8 @@ $__instances['live'] = array(
 	'db_name' => 'jobberbase',
 	'db_prefix' => '',
 	'app_url' => 'http://www.yourjobberbasedomain.com/',
+	// language to use
+	'lang_code' => 'en',
 	'ini_error_reporting' => E_ALL,
 	'ini_display_errors' => 'Off',
 	'location' => 'online',
@@ -45,15 +49,16 @@ $__instances['live'] = array(
 	'rewrite_mode' => 'apache_mod_rewrite'
 );
 
+
+// http requests
+if (isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI']))
+{
+	$_compare_to = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+}
+
 // setup current instance
 foreach ($__instances as $__instance)
 {
-	// http requests
-	if (isset($_SERVER['HTTP_HOST']))
-	{
-		$_compare_to = $_SERVER['HTTP_HOST'];
-	}
-
 	if (strstr($_compare_to, $__instance['prefix']))
 	{
 		define('DB_HOST', $__instance['db_host']);
@@ -83,8 +88,15 @@ foreach ($__instances as $__instance)
 		// error reporting
 		ini_set('error_reporting', $__instance['ini_error_reporting']);
 		ini_set('display_errors', $__instance['ini_display_errors']);
+
+		define('LANG_CODE', $__instance['lang_code']);
 		
 		break;
 	}
+}
+
+if(!defined('DB_HOST'))
+{
+	die('None of the configured JobberBase instances matched your request!<br />If you are an admin of this JobberBase installation, you may want to review the \'prefix\' values of the configured JobberBase instances in config.envs.php.');
 }
 ?>

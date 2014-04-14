@@ -16,22 +16,21 @@ class Postman extends Translator
 		parent::__construct(LANG_CODE);
 	}
 	
-	private function getEmailData($section)
+	private function getEmailData($section, $replace=array())
 	{
 		$e = $this->translations[$section];
-		
-		$arguments = func_get_args();
-		if (isset($arguments[1]) && is_array($arguments[1]))
+		$subject = $e['subject'];
+		$message = $e['message'];
+
+		if (is_array($replace) && !empty($replace))
 		{
-			$args = $arguments[1];
-			
-			foreach ($args as $search_for => $replace_with)
+			foreach ($replace as $search_for => $replace_with)
 			{
-				$subject = str_replace('{' . $search_for . '}', $replace_with, $e['subject']);
-				$message = str_replace('{' . $search_for . '}', $replace_with, $e['message']);
+				$subject = str_replace('{' . $search_for . '}', $replace_with, $subject);
+				$message = str_replace('{' . $search_for . '}', $replace_with, $message);
 			}
 		}
-		
+
 		return array('subject' => $subject, 'message' => $message);
 	}
 	
@@ -53,10 +52,9 @@ class Postman extends Translator
 		if ($friend_email != '' && $my_email != '' && validate_email($friend_email) && validate_email($my_email))
 		{
 			$mailer->SetFrom($my_email);
-    		$mailer->AddAddress($friend_email);
+			$mailer->AddAddress($friend_email);
 			$mailer->Subject = $subject;
-			$mailer->Body = $this->nl2br($msg);
-			$mailer->AltBody = $msg;
+			$mailer->Body = $msg;
 
 			if ($mailer->Send())
 			{
@@ -88,15 +86,14 @@ class Postman extends Translator
 		$subject = $email_data['subject'];
 		$msg = $data['apply_msg'] . "\n" . $email_data['message'];
 		
-    	$mailer->SetFrom($data['apply_email'], $data['apply_name']);
-    	$mailer->AddAddress($data['company_email'], $data['company_name']);
-    	$mailer->Subject = $subject;
-    	$mailer->Body = $this->nl2br($msg);
-    	$mailer->AltBody = $msg;
-    	
+		$mailer->SetFrom($data['apply_email'], $data['apply_name']);
+		$mailer->AddAddress($data['company_email'], $data['company_name']);
+		$mailer->Subject = $subject;
+		$mailer->Body = $msg;
+
 		if ($data['attachment_filename'] != '')
 		{
-    		$mailer->AddAttachment($data['attachment_path'], $data['attachment_filename']);
+			$mailer->AddAttachment($data['attachment_path'], $data['attachment_filename']);
 		}
 
 		if ($mailer->Send())
@@ -123,7 +120,9 @@ class Postman extends Translator
 			'JOB_DESCRIPTION' => $data['description'],
 			'JOB_POSTER_EMAIL' => $data['poster_email'],
 			'JOB_EDIT_URL' => BASE_URL . 'post/' . $data['id'] . '/' . $data['auth'] . '/',
+			'JOB_ACTIVATE_URL' => BASE_URL . 'activate/' . $data['id']. '/' . $data['auth'] . '/',
 			'JOB_DEACTIVATE_URL' => BASE_URL . 'deactivate/' . $data['id'] . '/' . $data['auth'] . '/',
+			'JOB_APPLICANTS_URL' => BASE_URL . 'view-applicants/' . $data['id'] . '/' . $data['auth'] . '/',
 			'JOB_POSTER_IP' => $_SERVER['REMOTE_ADDR'],
 			'JOB_POST_DATE' => $data['created_on']
 		);
@@ -141,9 +140,9 @@ class Postman extends Translator
 		$msg = $email_data['message'];
 		
 		$mailer->SetFrom(NOTIFY_EMAIL, SITE_NAME);
-    	$mailer->AddAddress(NOTIFY_EMAIL);
+		$mailer->AddAddress(NOTIFY_EMAIL);
 		$mailer->Subject = $subject;
-		$mailer->Body = $this->nl2br($msg);
+		$mailer->Body = nl2br($msg);
 		$mailer->AltBody = $msg;
 		
 		if ($mailer->Send())
@@ -172,10 +171,9 @@ class Postman extends Translator
 		if ($poster_email != '' && validate_email($poster_email))
 		{
 			$mailer->SetFrom(NOTIFY_EMAIL, SITE_NAME);
-	    	$mailer->AddAddress($poster_email);
+			$mailer->AddAddress($poster_email);
 			$mailer->Subject = $subject;
-			$mailer->Body = $this->nl2br($msg);
-			$mailer->AltBody = $msg;
+			$mailer->Body = $msg;
 			
 			if ($mailer->Send())
 			{
@@ -197,7 +195,9 @@ class Postman extends Translator
 			'SITE_NAME' => SITE_NAME,
 			'JOB_URL' => $url . URL_JOB ."/" . $data['id'] . "/" . $data['url_title'] . "/",
 			'JOB_EDIT_URL' => $url . "post/" . $data['id'] . "/" . $data['auth'] . "/",
-			'JOB_DEACTIVATE_URL' => $url . "deactivate/" . $data['id'] . "/" . $data['auth'] . "/"
+			'JOB_DEACTIVATE_URL' => $url . "deactivate/" . $data['id'] . "/" . $data['auth'] . "/",
+			'JOB_MANAGE_URL' => $url . "manage/" . $data['id'] . "/" . $data['auth'] . "/",
+			'JOB_APPLICANTS_URL' => $url . "view-applicants/" . $data['id'] . "/" . $data['auth'] . "/"
 		);
 		$email_data = $this->getEmailData('email_PublishToUser', $replace);
 		
@@ -207,10 +207,9 @@ class Postman extends Translator
 		if ($data['poster_email'] != '' && validate_email($data['poster_email']))
 		{
 			$mailer->SetFrom(NOTIFY_EMAIL, SITE_NAME);
-	    	$mailer->AddAddress($data['poster_email']);
+			$mailer->AddAddress($data['poster_email']);
 			$mailer->Subject = $subject;
-			$mailer->Body = $this->nl2br($msg);
-			$mailer->AltBody = $msg;
+			$mailer->Body = $msg;
 			
 			if ($mailer->Send())
 			{
@@ -253,9 +252,9 @@ class Postman extends Translator
 		$msg = $email_data['message'];
 		
 		$mailer->SetFrom(NOTIFY_EMAIL, SITE_NAME);
-    	$mailer->AddAddress(NOTIFY_EMAIL);
+		$mailer->AddAddress(NOTIFY_EMAIL);
 		$mailer->Subject = $subject;
-		$mailer->Body = $this->nl2br($msg);
+		$mailer->Body = nl2br($msg);
 		$mailer->AltBody = $msg;
 		
 		if ($mailer->Send())
@@ -268,27 +267,60 @@ class Postman extends Translator
 		}
 	}
 	
-	public function MailContact($name, $email, $msg)
+	public function MailContact($data)
 	{
 		$mailer = $this->getConfiguredMailer();
 		
 		$replace = array(
 			'SITE_NAME' => SITE_NAME,
-			'SENDER_NAME' => $name,
-			'SENDER_EMAIL' => $email,
+			'SENDER_NAME' => $data['name'],
+			'SENDER_EMAIL' => $data['email'],
 			'SENDER_IP' => $_SERVER['REMOTE_ADDR'],
 			'SEND_DATE' => date('Y-m-d H:i')
 		);
-		$email_data = $this->getEmailData('email_ReportSpam', $replace);
+		$email_data = $this->getEmailData('email_Contact', $replace);
 		
+		$subject = $email_data['subject'];
+		$msg = $data['message']. "\n" . $email_data['message'];
+		
+		$mailer->SetFrom($data['email'], $data['name']);
+		$mailer->AddAddress(NOTIFY_EMAIL);
+		$mailer->Subject = $subject;
+		$mailer->Body = $msg;
+		
+		if ($data['attachment_filename'] != '')
+		{
+			$mailer->AddAttachment($data['attachment_path'], $data['attachment_filename']);
+		}
+
+		if ($mailer->Send())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}	
+	}
+
+	public function MailSubscriptionPleaseConfirm($email, $auth)
+	{
+		$mailer = $this->getConfiguredMailer();
+
+		$replace = array(
+			'SITE_NAME' => SITE_NAME,
+			'SITE_URL' => APP_URL,
+			'SENDER_IP' => $_SERVER['REMOTE_ADDR'],
+			'MANAGE_URL' => APP_URL . 'subscriptions/' . $email . '/' . $auth . '/'
+		);
+		$email_data = $this->getEmailData('email_SubscriptionPleaseConfirm', $replace);
 		$subject = $email_data['subject'];
 		$msg = $email_data['message'];
 		
-		$mailer->SetFrom($email, $name);
-    	$mailer->AddAddress(NOTIFY_EMAIL);
+		$mailer->SetFrom(ADMIN_EMAIL);
+		$mailer->AddAddress($email);
 		$mailer->Subject = $subject;
-		$mailer->Body = $this->nl2br($msg);
-		$mailer->AltBody = $msg;
+		$mailer->Body = $msg;
 		
 		if ($mailer->Send())
 		{
@@ -299,7 +331,93 @@ class Postman extends Translator
 			return false;
 		}	
 	}
-	
+
+	public function MailSubscriptionUpdated($email, $auth)
+	{
+		$mailer = $this->getConfiguredMailer();
+
+		$replace = array(
+			'SITE_NAME' => SITE_NAME,
+			'SITE_URL' => APP_URL,
+			'SENDER_IP' => $_SERVER['REMOTE_ADDR'],
+			'MANAGE_URL' => APP_URL . 'subscriptions/' . $email . '/' . $auth . '/'
+		);
+		$email_data = $this->getEmailData('email_SubscriptionUpdated', $replace);
+		$subject = $email_data['subject'];
+		$msg = $email_data['message'];
+		
+		$mailer->SetFrom(ADMIN_EMAIL);
+		$mailer->AddAddress($email);
+		$mailer->Subject = $subject;
+		$mailer->Body = $msg;
+		
+		if ($mailer->Send())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}	
+	}
+
+	public function MailSubscriptionRemoved($email)
+	{
+		$mailer = $this->getConfiguredMailer();
+
+		$replace = array(
+			'SITE_NAME' => SITE_NAME,
+			'SITE_URL' => APP_URL,
+			'SENDER_IP' => $_SERVER['REMOTE_ADDR']
+		);
+		$email_data = $this->getEmailData('email_SubscriptionRemoved', $replace);
+		$subject = $email_data['subject'];
+		$msg = $email_data['message'];
+		
+		$mailer->SetFrom(ADMIN_EMAIL);
+		$mailer->AddAddress($email);
+		$mailer->Subject = $subject;
+		$mailer->Body = $msg;
+		
+		if ($mailer->Send())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}	
+	}
+
+	public function MailSubscriptionJobPosted($email, $auth, $job)
+	{
+		$mailer = $this->getConfiguredMailer();
+		$replace = array(
+			'SITE_NAME' => SITE_NAME,
+			'SITE_URL' => APP_URL,
+			'MANAGE_URL' => APP_URL . 'subscriptions/' . $email . '/' . $auth . '/',
+			'JOB_TITLE' => $job->mTitle,
+			'JOB_SUMMARY' => $job->mSummary,
+			'JOB_URL' => APP_URL . URL_JOB .  '/' . $job->mId . '/' . $job->mUrlTitle . '/'
+		);
+		$email_data = $this->getEmailData('email_SubscriptionJobPosted', $replace);
+		$subject = $email_data['subject'];
+		$msg = $email_data['message'];
+
+		$mailer->SetFrom(ADMIN_EMAIL);
+		$mailer->AddAddress($email);
+		$mailer->Subject = $subject;
+		$mailer->Body = $msg;
+
+		if ($mailer->Send())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	private function getConfiguredMailer()
 	{
@@ -325,11 +443,6 @@ class Postman extends Translator
 		}
 		
 		return $mailer;
-	}
-	
-	private function nl2br($text)
-	{
-		return str_replace(array("\r\n", "\r", "\n"), "<br />", $text);
 	}
 }
 ?>

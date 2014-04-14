@@ -4,39 +4,6 @@
 		
 		jobber_url: "",
 		
-		FixPng: function()
-		{
-			var arVersion = navigator.appVersion.split("MSIE");
-			var version = parseFloat(arVersion[1]);
-
-			if ((version >= 5.5) && (document.body.filters)) 
-			{
-			   for(var i=0; i<document.images.length; i++)
-			   {
-			      var img = document.images[i];
-			      var imgName = img.src.toUpperCase();
-
-			      if (imgName == this.jobber_url.toUpperCase() + "IMG/BT-RSS.PNG")
-			      {
-			         var imgID = (img.id) ? "id='" + img.id + "' " : "";
-			         var imgClass = (img.className) ? "class='" + img.className + "' " : "";
-			         var imgTitle = (img.title) ? "title='" + img.title + "' " : "title='" + img.alt + "' ";
-			         var imgStyle = "display:inline-block;" + img.style.cssText;
-			         if (img.align == "left") imgStyle = "float:left;" + imgStyle;
-			         if (img.align == "right") imgStyle = "float:right;" + imgStyle;
-			         if (img.parentElement.href) imgStyle = "cursor:hand;" + imgStyle;
-			         var strNewHTML = "<span " + imgID + imgClass + imgTitle;
-			         strNewHTML += " style=\"" + "width:" + img.width + "px; height:" + img.height + "px;" + imgStyle + ";";
-			         strNewHTML += "filter:progid:DXImageTransform.Microsoft.AlphaImageLoader";
-			         strNewHTML += "(src=\'" + img.src + "\', sizingMethod='scale');\"></span>";
-			         img.outerHTML = strNewHTML;
-			         i = i - 1;
-			      }
-			   }
-			}
-
-		},
-		
 		PerformSearch: function(url, keywords)
 		{
 			clearTimeout(window.search_timer);	
@@ -85,7 +52,32 @@
 				});
 			}
 		},
-		
+
+		Subscribe: {
+			showHide: function()
+			{
+				$("#subscribe").toggle();
+			},
+
+			init: function()
+			{
+				$("#frm-subscribe").ajaxForm(function(responseText) {
+					if (responseText == "1")
+					{
+						var msg = Jobber.I18n.js.subscribe_successful;
+						$("#frm-subscribe").clearForm();
+						$("#subscribe-response").css({ color: "green" });
+					}
+					else
+					{
+						var msg = Jobber.I18n.js.subscribe_unsuccessful;
+						$("#subscribe-response").css({ color: "red" });
+					}
+					$("#subscribe-response").html(msg);
+				});
+			}
+		},
+
 		ReportSpam: function(url, job_id)
 		{
 			$.ajax({
@@ -106,6 +98,17 @@
 					}
 					$("#report-spam-response").html(status);
 			  }
+			});
+		},
+
+		InitEditor: function() {
+			if (typeof tinyMCE != 'object') {
+				return;
+			}
+			tinyMCE.init({
+				mode : "specific_textareas",
+				theme : "simple",
+				editor_selector : "mceEditor"
 			});
 		}
 	}

@@ -3,30 +3,20 @@
 	define('NUMBER_OF_LATEST_JOBS_TO_GET', $settings['latest_jobs']);
 	define('NUMBER_OF_SPOTLIGHT_JOBS_TO_GET', $settings['spotlight_jobs']);
 
-	// get jobs
-	$smarty->assign('jobs_count_all', $job->CountJobs());
-
-	if (SIDEBAR_SHOW_WHAT == 'categories')
+	if (isset($settings['home_page_content']) && $settings['home_page_content'] != '')
 	{
-		$smarty->assign('jobs_count_all_categs', $job->GetJobsCountForAllCategs());
-	}
-	else
-	{
-		$numberOfJobsInOtherCities = $job->GetNumberOfJobsInOtherCities();
-		
-		$smarty->assign('jobs_count_in_other_cities', $numberOfJobsInOtherCities);
-		$smarty->assign('hide_other_cities_in_sidebar', $numberOfJobsInOtherCities < SIDEBAR_ONLY_CITIES_WITH_AT_LEAST_NUMBER_OF_JOBS);
-		
-		$jobsCountPerCity = $job->GetJobsCountPerCity();
-		
-		// exclude the cities that don't have at least the specified number of jobs 
-		foreach ($jobsCountPerCity as $index => $jobsPerCity)
-		{
-			if ($jobsPerCity['jobs_in_city'] < SIDEBAR_ONLY_CITIES_WITH_AT_LEAST_NUMBER_OF_JOBS)
-				unset($jobsCountPerCity[$index]);
+		$sql = '
+			SELECT *
+			FROM '.DB_PREFIX.'pages 
+			WHERE url = "' . $db->real_escape_string($settings['home_page_content']) . '"';
+		$result = $db->query($sql);
+		$pageData = $result->fetch_assoc();
+		if (is_array($pageData)) {
+			$html_title = $pageData['page_title'] . ' - ' . SITE_NAME;
+			$meta_keywords = $pageData['keywords'];
+			$meta_description = $pageData['description'];
+			$smarty->assign('page', $pageData);
 		}
-		
-		$smarty->assign('jobs_count_per_city', $jobsCountPerCity);
 	}
 
 	$smarty->assign('most_applied_to_jobs', $job->GetMostAppliedToJobs(NUMBER_OF_MOST_APPLIED_TO_JOBS_TO_GET));

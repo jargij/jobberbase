@@ -17,11 +17,11 @@ class Translator
 	public function __construct($languageCode)
 	{
 		global $db;
-
+		
 		$this->lang_code = $languageCode;
 		
-		$sql = 'SELECT a.*, b.id AS lang_id 
-		               FROM i18n_translations a, i18n_langs b 
+		$sql = 'SELECT a.*
+		               FROM '.DB_PREFIX.'i18n_translations a, '.DB_PREFIX.'i18n_langs b 
 		               WHERE b.code = "' . $languageCode . '" AND b.id = a.lang_id 
 		               ORDER BY a.parent_id ASC, a.item ASC';
 		$trans = $db->QueryArray($sql);
@@ -59,19 +59,27 @@ class Translator
 		return $this->translations_raw;
 	}
 	
-	public function getLangId()
+	public function getLanguageIdByCode()
 	{
 		global $db;
 		
-		$sql = 'SELECT id FROM i18n_langs WHERE code = "' . $this->lang_code . '"';
+		$sql = 'SELECT id FROM '.DB_PREFIX.'i18n_langs WHERE code = "' . $this->lang_code . '"';
 		return $db->QueryItem($sql);
 	}
-	
+
+	public function getLanguageCodeById($id)
+	{
+		global $db;
+
+		$sql = 'SELECT code FROM '.DB_PREFIX.'i18n_langs WHERE id = ' . $id;
+		return $db->QueryItem($sql);
+	}
+
 	public function getItemById($id)
 	{
 		global $db;
 		
-		$sql = 'SELECT * FROM i18n_translations WHERE id = ' . $id;
+		$sql = 'SELECT * FROM '.DB_PREFIX.'i18n_translations WHERE id = ' . $id;
 		return $db->QueryRow($sql);
 	}
 	
@@ -121,11 +129,10 @@ class Translator
 		 }
 	}
 	
-	
 	public function getLanguages()
 	{
 		global $db;
-		$sql = 'SELECT * FROM i18n_langs ORDER BY name ASC';
+		$sql = 'SELECT * FROM '.DB_PREFIX.'i18n_langs ORDER BY name ASC';
 		return $db->QueryArray($sql);
 	}
 	
@@ -138,7 +145,7 @@ class Translator
 			return false;
 		}
 		
-		$sql = 'INSERT INTO i18n_langs (name, code) VALUES ("' . $name . '", "' . $code . '")';
+		$sql = 'INSERT INTO '.DB_PREFIX.'i18n_langs (name, code) VALUES ("' . $name . '", "' . $code . '")';
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -158,7 +165,7 @@ class Translator
 			return false;
 		}
 		
-		$sql = 'UPDATE i18n_langs SET name = "' . $name . '", code = "' . $code . '" WHERE id = ' . $id;
+		$sql = 'UPDATE '.DB_PREFIX.'i18n_langs SET name = "' . $name . '", code = "' . $code . '" WHERE id = ' . $id;
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -173,7 +180,7 @@ class Translator
 	{
 		global $db;
 		
-		$sql = 'DELETE FROM i18n_langs WHERE id = ' . $id;
+		$sql = 'DELETE FROM '.DB_PREFIX.'i18n_langs WHERE id = ' . $id;
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -194,7 +201,7 @@ class Translator
 			return false;
 		}
 		
-		$sql = 'INSERT INTO i18n_translations (id, parent_id, lang_id, item) VALUES (NULL, 0, ' . $lang_id . ', "' . $item . '")';
+		$sql = 'INSERT INTO '.DB_PREFIX.'i18n_translations (id, parent_id, lang_id, item) VALUES (NULL, 0, ' . $lang_id . ', "' . $item . '")';
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -211,7 +218,7 @@ class Translator
 		
 		$section = $this->getItemById($section_id);
 		
-		$sql = 'INSERT INTO i18n_translations (id, parent_id, lang_id, item, value) VALUES (NULL, ' . $section_id . ', ' . $section['lang_id'] . ', "' . $item . '", "' . $value . '")';
+		$sql = 'INSERT INTO '.DB_PREFIX.'i18n_translations (id, parent_id, lang_id, item, value) VALUES (NULL, ' . $section_id . ', ' . $section['lang_id'] . ', "' . $item . '", "' . $value . '")';
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -226,7 +233,7 @@ class Translator
 	{
 		global $db;
 		
-		$sql = 'UPDATE i18n_translations SET value = "' . $value . '" WHERE id = ' . $id;
+		$sql = 'UPDATE '.DB_PREFIX.'i18n_translations SET value = "' . $value . '" WHERE id = ' . $id;
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -241,7 +248,7 @@ class Translator
 	{
 		global $db;
 		
-		$sql = 'DELETE FROM i18n_translations WHERE id = ' . $id;
+		$sql = 'DELETE FROM '.DB_PREFIX.'i18n_translations WHERE id = ' . $id;
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -256,12 +263,7 @@ class Translator
 	{
 		global $db;
 		
-		// delete section
-		$sql = 'DELETE FROM i18n_translations WHERE id = ' . $id;
-		$db->Execute($sql);
-		
-		// delete all translation items under this section
-		$sql = 'DELETE FROM i18n_translations WHERE parent_id = ' . $id;
+		$sql = 'DELETE FROM '.DB_PREFIX.'i18n_translations WHERE id = ' . $id . ' OR parent_id = ' . $id;
 		$db->Execute($sql);
 		
 		if ($db->affected_rows > 0)
@@ -277,7 +279,7 @@ class Translator
 	private function languageExists($name, $code)
 	{
 		global $db;
-		$sql = 'SELECT id FROM i18n_langs WHERE name = "' . $name . '" OR code = "' . $code . '"';
+		$sql = 'SELECT id FROM '.DB_PREFIX.'i18n_langs WHERE name = "' . $name . '" OR code = "' . $code . '"';
 		$res = $db->QueryRow($sql);
 		
 		if (!empty($res))
@@ -291,7 +293,7 @@ class Translator
 	private function translationSectionExists($item, $lang_id)
 	{
 		global $db;
-		$sql = 'SELECT id FROM i18n_translations WHERE parent_id = 0 AND item = "' . $item . '" AND lang_id = ' . $lang_id;
+		$sql = 'SELECT id FROM '.DB_PREFIX.'i18n_translations WHERE parent_id = 0 AND item = "' . $item . '" AND lang_id = ' . $lang_id;
 		$res = $db->QueryRow($sql);
 		
 		if (!empty($res))
@@ -305,7 +307,7 @@ class Translator
 	private function translationItemExists($item, $lang_id)
 	{
 		global $db;
-		$sql = 'SELECT id FROM i18n_translations WHERE parent_id != 0 AND item = "' . $item . '" AND lang_id = ' . $lang_id;
+		$sql = 'SELECT id FROM '.DB_PREFIX.'i18n_translations WHERE parent_id != 0 AND item = "' . $item . '" AND lang_id = ' . $lang_id;
 		$res = $db->QueryRow($sql);
 		
 		if (!empty($res))

@@ -42,7 +42,14 @@
 		$j = new Job($job_id);
 
 		$f = pathinfo($_FILES['apply_cv']['name']);
-		$filename = md5(time() . '_' . $_FILES['apply_cv']['name'] . uniqid()) . '.' . $f['extension'];
+		$basefilename = $f['filename'] . '_' . uniqid();
+		$filename = $basefilename . '.' . $f['extension'];
+		$suffix = 0;
+		while (file_exists(FILE_UPLOAD_DIR . $filename)) {
+			$suffix++;
+			$filename = $basefilename . '_' . $suffix . '.' . $f['extension'];
+		}
+
 		if (move_uploaded_file($_FILES['apply_cv']['tmp_name'], FILE_UPLOAD_DIR . $filename))
 		{
 			$attachment = $filename;
@@ -104,9 +111,9 @@
 		}
 		
 		// delete uploaded file (cleanup)
-		if ($attachment != '')
+		if (($attachment != '') && !($settings['keep_uploaded_cvs']))
 		{
-			unlink(APP_PATH . FILE_UPLOAD_DIR . $attachment);
+			@unlink(APP_PATH . FILE_UPLOAD_DIR . $attachment);
 		}
 	}
 	else

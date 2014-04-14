@@ -8,6 +8,7 @@
 			</div>
 		{/if}
 			<h2><img src="{$BASE_URL}_tpl/{$THEME}/img/icon-{$job.type_var_name}.png" alt="{$job.type_name}" /> {$job.title}</h2>
+			{if $job.summary}<p>{$job.summary}</p>{/if}
 			<p>
 				<span class="light">at</span>
 				{if $job.url && $job.url != 'http://'}
@@ -22,7 +23,7 @@
 				{/if}
 			</p>
 			<div id="job-description">
-				{$job.textiledDescription}
+				{$job.description}
 			</div>
 		</div><!-- #job-details -->
 	</div>

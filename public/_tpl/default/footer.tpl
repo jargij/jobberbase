@@ -1,43 +1,18 @@
 	</div><!-- #container -->
 	<div class="footer">
 		<div id="footer-contents">
-			
-			<div id="footer-col1">
-				{if count($navigation.footer1) > 0}
-					{$translations.footer.column_use}:<br />
-					{if $navigation.footer1 != ''}
-						{section name=tmp loop=$navigation.footer1}
-							{if $smarty.const.ENABLE_NEW_JOBS || (!$smarty.const.ENABLE_NEW_JOBS && $navigation.footer1[tmp].url != 'post')}
-								<a href="{if $navigation.footer1[tmp].outside != 1}{$BASE_URL}{/if}{$navigation.footer1[tmp].url}/" title="{$navigation.footer1[tmp].title}" >{$navigation.footer1[tmp].name}</a><br />
-							{/if}
-						{/section}
-					{/if}
-				{/if}
-			</div>
-			<div id="footer-col2">
-				{if count($navigation.footer2) > 0}
-					{$translations.footer.column_find}:<br />
-					{if $navigation.footer2 != ''}
-						{section name=tmp loop=$navigation.footer2}
-							{if $smarty.const.ENABLE_NEW_JOBS || (!$smarty.const.ENABLE_NEW_JOBS && $navigation.footer2[tmp].url != 'post')}
-								<a href="{if $navigation.footer2[tmp].outside != 1}{$BASE_URL}{/if}{$navigation.footer2[tmp].url}/" title="{$navigation.footer2[tmp].title}" >{$navigation.footer2[tmp].name}</a><br />
-							{/if}
-						{/section}
-					{/if}
-				{/if}
-			</div>
-			<div id="footer-col3">
-				{if count($navigation.footer3) > 0}
-					{$translations.footer.column_misc}:<br />
-					{if $navigation.footer3 != ''}
-						{section name=tmp loop=$navigation.footer3}
-							{if $smarty.const.ENABLE_NEW_JOBS || (!$smarty.const.ENABLE_NEW_JOBS && $navigation.footer3[tmp].url != 'post')}
-								<a href="{if $navigation.footer3[tmp].outside != 1}{$BASE_URL}{/if}{$navigation.footer3[tmp].url}/" title="{$navigation.footer3[tmp].title}" >{$navigation.footer3[tmp].name}</a><br />
-							{/if}
-						{/section}
-					{/if}
-				{/if}
-			</div>
+			{if $navigation.footer}
+				{foreach from=$navigation.footer item=item}
+					<div class="footer-col">
+						{$item.name}<br />
+						{if $item.children}
+							{foreach from=$item.children item=subitem}
+								<a href="{if $subitem.outside != 1}{$BASE_URL}{/if}{$subitem.url}{if ($subitem.outside != 1) && ($subitem.url != '')}/{/if}" title="{$subitem.title}" >{$subitem.name}</a><br />
+							{/foreach}
+						{/if}
+					</div>
+				{/foreach}
+			{/if}
 			<div id="footer-copyright">
 				{$translations.footer.powered_by}
 				<a href="http://www.jobberbase.com/" title="open source job board software">jobberBase</a>
@@ -48,13 +23,16 @@
 	
 	<!--[if !IE]><script src="{$BASE_URL}js/jquery.history.js" type="text/javascript"></script><![endif]-->
  	<script src="{$BASE_URL}js/jquery.form.js" type="text/javascript"></script>
-	<script src="{$BASE_URL}js/cmxforms.js" type="text/javascript"></script>
 	<script src="{$BASE_URL}js/jquery.metadata.js" type="text/javascript"></script>
 	<script src="{$BASE_URL}js/jquery.validate.min.js" type="text/javascript"></script>
 	<script src="{$BASE_URL}js/functions.js" type="text/javascript"></script>
 	
 	<script type="text/javascript">
+	{if $editor}
+		Jobber.InitEditor();
+	{/if}
 	{literal}
+
  		$(document).ready(function()
 		{
 			Jobber.I18n = {/literal}{$translationsJson}{literal};
@@ -108,44 +86,5 @@
 	{/literal}
 	</script>
 	{/if}
-	
-	{php}
-	  if (isset($_SESSION['status']))
-		{
-			unset($_SESSION['status']);
-		}
-		if (isset($_SESSION['apply_mail_sent']))
-		{
-			unset($_SESSION['apply_mail_sent']);
-		}
-		if (isset($_SESSION['apply_errors']))
-		{
-			unset($_SESSION['apply_errors']);
-		}
-		if (isset($_SESSION['apply_fields']))
-		{
-			unset($_SESSION['apply_fields']);
-		}
-		if (isset($_SESSION['apply_allowed']))
-		{
-			unset($_SESSION['apply_allowed']);
-		}
-		if (isset($_SESSION['apply_successful']))
-		{
-			unset($_SESSION['apply_successful']);
-		}
-		if (isset($_SESSION['contact_msg_sent']))
-		{
-			unset($_SESSION['contact_msg_sent']);
-		}
-		if (isset($_SESSION['contact_errors']))
-		{
-			unset($_SESSION['contact_errors']);
-		}
-		if (isset($_SESSION['contact_fields']))
-		{
-			unset($_SESSION['contact_fields']);
-		}
-	{/php}
 </body>
 </html>

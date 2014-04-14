@@ -17,9 +17,9 @@ if ($id != 0)
 	}
 	
 	$jobToEdit = $job->GetInfo();
-	$smarty->assign_by_ref('job', $jobToEdit);
 	
 	$smarty->assign('show_preview', false);
+	$smarty->assign('editor', true);
 	
 	if (!empty($_POST))
 	{
@@ -30,8 +30,6 @@ if ($id != 0)
         {
             $errors['input_id'] = $translations['jobs']['type_error']; $_POST['type_id'] = 0;
         }
-        if ($_POST['company'] == '')
-			$errors['company'] = $translations['jobs']['name_error'];
 		
 		if ($_POST['title'] == '')
 			$errors['title'] = $translations['jobs']['title_error'];
@@ -68,6 +66,7 @@ if ($id != 0)
 		$jobToEdit['company'] = $_POST['company'];
 		$jobToEdit['url'] = $_POST['url'];
 		$jobToEdit['title'] = $_POST['title'];
+		$jobToEdit['summary'] = $_POST['summary'];
 		$jobToEdit['city_id'] = $city_id;
 		$jobToEdit['location_outside_ro_where'] = ($isCitySelected ? '' : $_POST['location_outside_ro_where']);
 		$jobToEdit['category_id'] = $_POST['category_id'];
@@ -79,7 +78,6 @@ if ($id != 0)
 		$jobToEdit['type_var_name'] = get_type_varname_by_id($_POST['type_id']);
 		$jobToEdit['type_id'] = $_POST['type_id'];
 		
-		$jobToEdit['textiledDescription'] = $textile->TextileThis($_POST['description']);
 		$jobToEdit['location_outside_ro'] = $jobToEdit['location_outside_ro_where'];
 		
 		$is_location_anywhere = $jobToEdit['city_id'] == 0 && $jobToEdit['location_outside_ro'] == '';
@@ -104,11 +102,12 @@ if ($id != 0)
 				$smarty->assign('show_preview', true);
 			else
 			{
-				escape($_POST);	
+				escape($_POST, array('description'));
 				
 				$data = array('company' => $company,
-				          	  'url' => $url,
+				              'url' => $url,
 				              'title' => $title,
+				              'summary' => $summary,
 				              'city_id' => $city_id,
 				              'category_id' => $category_id,
 				              'type_id' => $type_id,
@@ -129,7 +128,9 @@ if ($id != 0)
 					$data['is_active'] = 1;
 					$data['spotlight'] = 0;
 					
-					$job->Create($data);
+					if ($jobId = $job->Create($data)) {
+						Subscriber::sendJob($jobId);
+					}
 				}
 				
 				$category = get_category_by_id($category_id);
@@ -142,6 +143,7 @@ if ($id != 0)
 			$smarty->assign('errors', $errors);
 	}
 		
+	$smarty->assign('job', $jobToEdit);
 	$smarty->assign('categories', get_categories());
 	$smarty->assign('types', get_types());
 	$smarty->assign('cities', get_cities());

@@ -1,4 +1,3 @@
-{if $CURRENT_PAGE == 'page-unavailable' || $CURRENT_PAGE == 'job-unavailable'}{php}header("HTTP/1.0 404 Not Found");{/php}{/if}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
@@ -20,7 +19,6 @@
 	
 	<!--[if !IE]><script src="{$BASE_URL}js/jquery.history.js" type="text/javascript"></script><![endif]-->
  	<script src="{$BASE_URL}js/jquery.form.js" type="text/javascript"></script>
-	<script src="{$BASE_URL}js/cmxforms.js" type="text/javascript"></script>
 	<script src="{$BASE_URL}js/jquery.metadata.js" type="text/javascript"></script>
 	<script src="{$BASE_URL}js/jquery.validate.min.js" type="text/javascript"></script>
 	<script src="{$BASE_URL}js/functions.js" type="text/javascript"></script>
@@ -29,7 +27,9 @@
 	<script type="text/javascript">
 		Jobber.I18n = {$translationsJson};
 	</script>
-	
+	{if $editor}
+	<script src="{$BASE_URL}js/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+	{/if}
 </head>
 
 <body>
@@ -67,7 +67,8 @@
 		
 		
 		
-			{php}/*<ul id="top">
+			{*
+			<ul id="top">
 				{if $navigation.primary != ''}
 					{section name=tmp loop=$navigation.primary}
 						{if $smarty.const.ENABLE_NEW_JOBS || (!$smarty.const.ENABLE_NEW_JOBS && $navigation.primary[tmp].url != 'post')}
@@ -80,10 +81,12 @@
 			</ul>
 			<div id="the_feed">
 				<a href="{$BASE_URL}rss/all/" title="{$translations.header.rss_title}"><img src="{$BASE_URL}_tpl/{$THEME}/img/bt-rss.png" alt="{$translations.header.rss_alt}" /></a>
-			</div>*/{/php}
+			</div>
+			*}
 		</div><!-- #header -->
 		
-		{php}/*<div id="box">
+		{*
+		<div id="box">
 			<div id="search">
 				<form id="search_form" method="post" action="{$BASE_URL}search/">
 					<fieldset>
@@ -109,6 +112,7 @@
 			{/section}
     	</ul>
 	</div><!-- #categs-nav -->
-	<div class="clear"></div>*/{/php}
+	<div class="clear"></div>
+	*}
 	<div id="mainbody" class="clearfix">	
 	

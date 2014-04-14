@@ -68,7 +68,7 @@
 		$job_flag = true;
 		
 		$url = BASE_URL . URL_JOB .'/' . $id . '/' . $info['url_title'] . '/';
-		$current_url = 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		$current_url = (($_SERVER["HTTPS"] == "on") ? "https" : "http").'://' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 		
 		if ($current_url != $url) redirect_to($url, 301);
 		
@@ -99,16 +99,6 @@
 		
 		$app = new JobApplication($id);
 		$info['applied_count'] = $app->Count();
-		
-		if (strstr($info['description'], '*'))
-		{
-			$txt = new Textile();
-			$info['description'] = $txt->TextileThis($info['description']);	
-		}
-		else
-		{
-			$info['description'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $info['description']);
-		}
 		
 		// ######### list other jobs by the same company #########
 		$compjobs = $job->ApiGetJobsByCompany($info['company'], 5, false);

@@ -1,7 +1,6 @@
 <?php
 	$category_var_name = $id;
-	$category = get_category_by_var_name($category_var_name);
-	
+
 	$category_id = $category['id'];
 	
 	$type_var_name = $extra;
@@ -39,8 +38,9 @@
 	$smarty->assign('types', get_types());
 	$smarty->assign('current_category', $category_var_name);
 	$smarty->assign('current_category_name', $category['name']);
+	$smarty->assign('current_category_id', $category_id);
 
-	$smarty->assign('seo_title', $category['title']);
+	$smarty->assign('seo_title', empty($category['title']) ? $category['name'] : $category['title']);
 	$smarty->assign('seo_desc', $category['description']);
 	$smarty->assign('seo_keys', $category['keywords']);
 

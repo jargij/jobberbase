@@ -20,6 +20,7 @@ class Job
 	var $mTypeName = false;
 	var $mCategoryId = false;
 	var $mTitle = false;
+	var $mSummary = false;
 	var $mDescription = false;
 	var $mCompany = false;
 	var $mLocation = false;
@@ -47,8 +48,8 @@ class Job
 		if (is_numeric($job_id))
 		{
 			$sanitizer = new Sanitizer;
-			$sql = 'SELECT a.type_id AS type_id, a.category_id AS category_id, a.title AS title, a.description AS description, 
-			               a.company AS company, a.url AS url, a.apply AS apply, 
+			$sql = 'SELECT a.type_id AS type_id, a.category_id AS category_id, a.title AS title, a.summary AS summary, 
+			               a.description AS description, a.company AS company, a.url AS url, a.apply AS apply, 
 			               DATE_FORMAT(a.created_on, "' . DATE_FORMAT . '") AS created_on, a.created_on AS mysql_date,
 			               a.is_temp AS is_temp, a.is_active AS is_active, a.spotlight AS spotlight,
 			               a.views_count AS views_count, a.auth AS auth, a.city_id AS city_id, a.outside_location AS outside_location,
@@ -68,6 +69,7 @@ class Job
 				$this->mCategoryId = $row['category_id'];
 				$this->mCategoryName = $row['category_name'];
 				$this->mTitle = str_replace('&', '&amp;', $row['title']);
+				$this->mSummary = str_replace('&', '&amp;', $row['summary']);
 				$this->mDescription = $row['description'];
 				$this->mCompany = $row['company'];
 				$this->mUrl = $row['url'];
@@ -103,6 +105,7 @@ class Job
 					 'company' => stripslashes($this->mCompany),
 					 'url' => stripslashes($this->mUrl),
 					 'title' => stripslashes($this->mTitle),
+					 'summary' => stripslashes($this->mSummary),
 					 'url_title' => stripslashes($this->mUrlTitle),
 					 'location' => $this->mLocation,
 					 'location_outside_ro' => $this->mLocationOutsideRo,
@@ -136,6 +139,7 @@ class Job
 					 'company' => stripslashes($this->mCompany),
 					 'url' => stripslashes($this->mUrl),
 					 'title' => stripslashes($this->mTitle),
+					 'summary' => stripslashes($this->mSummary),
 					 'url_title' => stripslashes($this->mUrlTitle),
 					 'location' => $this->mLocation,
 					 'location_outside_ro' => $this->mLocationOutsideRo,
@@ -184,7 +188,8 @@ class Job
 	// $random: (1/0) randomize results?
 	// $days_behind: (int) only get results from last N days
 	// $for_feed: (boolean) is this request from rss feed?
-	public function GetJobs($type_id = false, $categ_id = false, $limit = false, $random, $days_behind, $for_feed = false, $city_id = false, $spotlight = false)
+	// $poster_email: (string) poster email
+	public function GetJobs($type_id = false, $categ_id = false, $limit = false, $random, $days_behind, $for_feed = false, $city_id = false, $spotlight = false, $poster_email = false)
 	{
 		global $db;
 		$jobs = array();
@@ -211,7 +216,12 @@ class Job
 		{
 			$conditions .= ' AND category_id = ' . $categ_id;
 		}
-		
+
+		if ($poster_email)
+		{
+			$conditions .=' AND poster_email = "' . addslashes($poster_email) . '"';
+		}
+
 		if ($days_behind > 0)
 		{
 			$conditions .=' AND created_on >= DATE_SUB(NOW(), INTERVAL ' . $days_behind . ' DAY)';
@@ -234,8 +244,8 @@ class Job
 		}
 		
 		if ($spotlight &&  is_numeric($spotlight))
-    	{
-  			$conditions .= ' AND spotlight = ' . $spotlight;
+		{
+			$conditions .= ' AND spotlight = ' . $spotlight;
 		}
 
 		if ($random == 1)
@@ -322,7 +332,32 @@ class Job
 		
 		return $jobs;
 	}
-	
+
+	public function GetPaginatedJobsForPoster($email, $startIndex, $numberOfJobsToGet, $jobTypeID=false)
+	{
+		global $db;
+		$jobs = array();
+
+		$sql = 'SELECT id
+		               FROM '.DB_PREFIX.'jobs
+		               WHERE poster_email = "' . $email . '" AND is_temp = 0 AND is_active = 1';
+		if ($jobTypeID)
+		{
+			$sql .= ' AND type_id = ' . $jobTypeID;
+		}
+		$sql .= ' ORDER BY created_on DESC limit ' . $startIndex . ',' . $numberOfJobsToGet;
+
+		$result = $db->query($sql);
+
+		while ($row = $result->fetch_assoc())
+		{
+			$current_job = new Job($row['id']);
+			$jobs[] = $current_job->GetInfo();
+		}
+
+		return $jobs;
+	}
+
 	public function GetPaginatedJobs($startIndex, $numberOfJobsToGet, $jobTypeID = 0)
 	{
 		global $db;
@@ -517,7 +552,7 @@ class Job
 		$jobs = array();
 		$conditions = '';
 		
-		if ($company)
+		if ($company !== false)
 		{
 			$conditions .= ' AND company LIKE "' . $db->real_escape_string($company) . '"';
 		}
@@ -640,7 +675,7 @@ class Job
 				}
 				if ($found_city)
 				{
-					$conditions .= ' AND (title LIKE "%' . $keywords . '%" OR company LIKE "%' . $keywords . '%"' .  ' OR description LIKE "%' . $keywords . '%")';	
+					$conditions .= ' AND (title LIKE "%' . $keywords . '%" OR summary LIKE "%' . $keywords . '%" OR company LIKE "%' . $keywords . '%"' .  ' OR description LIKE "%' . $keywords . '%")';	
 				}
 			}
  
@@ -648,7 +683,7 @@ class Job
 			{
 				if ($kw1 != '')
 				{
-					$conditions .= ' (title LIKE "%' . $kw1 . '%" OR company LIKE "%' . $kw1 . '%" OR description LIKE "%'. $kw1 . '%")';
+					$conditions .= ' (title LIKE "%' . $kw1 . '%" OR summary LIKE "%' . $kw1 . '" OR company LIKE "%' . $kw1 . '%" OR description LIKE "%'. $kw1 . '%")';
 					$_SESSION['keywords_array'][] = $kw1;
 				}
 				if ($kw2 != '')
@@ -672,7 +707,7 @@ class Job
 					{
 						$extra_conditions .= ' OR city_id = ' . $row['id'];
 					}
-					$conditions = 'title LIKE "%' . $keywords . '%" OR company LIKE "%' . $keywords . '%"' .  ' OR description LIKE "%' . $keywords . '%" OR outside_location LIKE "%' . $keywords . '%"' . $extra_conditions;
+					$conditions = 'title LIKE "%' . $keywords . '%" OR summary LIKE "%' . $keywords . '%" OR company LIKE "%' . $keywords . '%"' .  ' OR description LIKE "%' . $keywords . '%" OR outside_location LIKE "%' . $keywords . '%"' . $extra_conditions;
  
 					$_SESSION['keywords_array'][] = $keywords;
 				}
@@ -726,7 +761,7 @@ class Job
 		            $check_cities .= 'OR city_id = "'.$cities_r[$a].'" ';
 		          }
 		        }
-		        $conditions .= 'AND (title LIKE "%' . $keywords_r[$i] . '%" OR company LIKE "%' . $keywords_r[$i] . '%" OR description LIKE "%' . $keywords_r[$i] . '%" OR outside_location LIKE "%' . $keywords_r[$i] . '%" '.$check_cities.' ) ';
+		        $conditions .= 'AND (title LIKE "%' . $keywords_r[$i] . '%" OR summary LIKE "%' . $keywords_r[$i] . '%" OR company LIKE "%' . $keywords_r[$i] . '%" OR description LIKE "%' . $keywords_r[$i] . '%" OR outside_location LIKE "%' . $keywords_r[$i] . '%" '.$check_cities.' ) ';
 		    }
  
 			$sql = 'SELECT id
@@ -826,7 +861,13 @@ class Job
 	{
 		return $this->mAuth;
 	}
-	
+
+	// Get job poster's email address
+	public function GetPosterEmail()
+	{
+		return $this->mPosterEmail;
+	}
+
 	public function IncreaseViewCount()
 	{
 		global $db;
@@ -870,11 +911,12 @@ class Job
 		{
 			$params['apply_online'] = 0;
 		}
-		$sql = 'INSERT INTO '.DB_PREFIX.'jobs (type_id, category_id, title, description, company, city_id, url, apply, created_on, is_temp, is_active, 
+		$sql = 'INSERT INTO '.DB_PREFIX.'jobs (type_id, category_id, title, summary, description, company, city_id, url, apply, created_on, is_temp, is_active, 
 			                       views_count, auth, outside_location, poster_email, apply_online, spotlight)
 		                         VALUES (' . $params['type_id'] . ',
 		                                 ' . $params['category_id'] . ',
 		                                 "' . $params['title'] . '",
+										 "' . $params['summary'] . '",
 		                                 "' . $params['description'] . '",
 		                                 "' . $params['company'] . '",
 		                                 ' . $params['city_id'] . ',
@@ -909,6 +951,7 @@ class Job
 		$sql = 'UPDATE '.DB_PREFIX.'jobs SET type_id = ' . $params['type_id'] . ',
         										category_id = ' . $params['category_id'] . ',
 										        title = "' . $params['title'] . '",
+										        summary = "' . $params['summary'] . '",
 										        description = "' . $params['description'] . '",
 										        company = "' . $params['company'] . '",
 										        city_id = ' . $params['city_id'] . ',
@@ -998,19 +1041,26 @@ class Job
 	public function DeleteJobAdmin()
 	{
 		global $db;
-			
+
 		$sql = 'DELETE FROM '.DB_PREFIX.'hits WHERE job_id  = ' . $this->mId;
-		$res = $db->query($sql);	
-		
+		$res = $db->query($sql);
+
+		$sql = 'SELECT cv_path FROM '.DB_PREFIX.'job_applications WHERE job_id = ' . $this->mId;
+		$cvs = $db->QueryArray($sql);
+
 		$sql = 'DELETE FROM '.DB_PREFIX.'job_applications WHERE job_id  = ' . $this->mId;
 		$res = $res && $db->query($sql);
-		
+
 		$sql = 'DELETE FROM '.DB_PREFIX.'spam_reports WHERE job_id  = ' . $this->mId;
 		$res = $res && $db->query($sql);
 
 		$sql = 'DELETE FROM '.DB_PREFIX.'jobs WHERE id  = ' . $this->mId;
 		$res = $res && $db->query($sql);
-		
+
+		foreach ($cvs as $row) {
+			@unlink(APP_PATH . FILE_UPLOAD_DIR . $row['cv_path']);
+		}
+
 		return ($res==false)?$res:true;
 	}
 	public function MakeValidUrl($string)
@@ -1037,25 +1087,11 @@ class Job
 		return $auth;
 	}
 	
-	public function CountJobs($categ = false, $type = false)
+	public function CountJobs($categ = false, $type = false, $city_id = false, $poster_email = false)
 	{
 		global $db;
 		$condition = '';
-	 	
-		if ($type)
-		{
-			if (!is_numeric($type))
-			{
-				$type_id = $this->GetTypeId($type);
-			}
-			else
-			{
-				$type_id = $type;
-			}
-			
-			$condition .= ' AND type_id = ' . $type_id;
-		}
-		
+
 		if ($categ)
 		{
 			if (!is_numeric($categ))
@@ -1070,11 +1106,35 @@ class Job
 			$condition .= ' AND category_id = ' . $categ_id;
 		}
 
+		if ($type)
+		{
+			if (!is_numeric($type))
+			{
+				$type_id = $this->GetTypeId($type);
+			}
+			else
+			{
+				$type_id = $type;
+			}
+			
+			$condition .= ' AND type_id = ' . $type_id;
+		}
+
+		if ($city_id && is_numeric($city_id))
+		{
+			$condition .= ' AND city_id = ' . $city_id;
+		}
+
+		if ($poster_email)
+		{
+			$condition .= ' AND poster_email = "' . addslashes($poster_email) . '"';
+		}
+
 		$sql = 'SELECT COUNT(id) AS total FROM '.DB_PREFIX.'jobs WHERE is_temp = 0 AND is_active = 1' . $condition;
-		
+
 		$result = $db->query($sql);
 		$row = $result->fetch_assoc();
-		return $row['total'];	
+		return $row['total'];
 	}
 	
 	public function CountJobsOfType($type_id)

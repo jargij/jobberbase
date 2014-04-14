@@ -1,6 +1,3 @@
-{if $CURRENT_PAGE == 'page-unavailable' || $CURRENT_PAGE == 'job-unavailable'}
-	{php}header("HTTP/1.0 404 Not Found");{/php}
-{/if}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
@@ -16,6 +13,9 @@
 	{/if}
 	<link rel="stylesheet" href="{$BASE_URL}_tpl/{$THEME}/css/screen.css" type="text/css" media="screen" />
 	<script src="{$BASE_URL}js/jquery.js" type="text/javascript"></script>
+	{if $editor}
+	<script src="{$BASE_URL}js/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+	{/if}
 </head>
 
 <body>

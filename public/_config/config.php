@@ -7,13 +7,15 @@
  *             (see license.txt).
  */
   
-	define('APP_PATH', str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, str_replace('_config', '', dirname(__FILE__)) . DIRECTORY_SEPARATOR));
+	define('APP_PATH', dirname(dirname(__FILE__)).'/');
 
 	// Environments setup
 	require_once APP_PATH . '_config/config.envs.php';
 
 	if(isset($_SERVER['SCRIPT_NAME'])) 
 	{
+		// on Windows _APP_MAIN_DIR becomes \ and abs url would look something like HTTP_HOST\/restOfUrl, so \ should be trimed too
+		// @modified Chis Florinel <chis.florinel@candoo.ro>
 		$app_main_dir = rtrim(dirname($_SERVER['SCRIPT_NAME']),'/\\');	
 		define('_APP_MAIN_DIR', $app_main_dir);
   	} 
@@ -35,8 +37,8 @@
 	require_once APP_PATH . '_lib/class.Cache.php';
 	require_once APP_PATH . '_lib/class.phpmailer.php';
 	require_once APP_PATH . '_lib/class.Postman.php';
-	require_once APP_PATH . '_lib/class.Textile.php';
 	require_once APP_PATH . '_lib/class.Sanitizer.php';
+	require_once APP_PATH . '_lib/class.Subscriber.php';
 	require_once APP_PATH . '_lib/class.Db.php';
 	// comment the previous line and uncomment the next line if you get a Class 'mysqli' not found error
 	// require_once APP_PATH . '_lib/class.Db.MySql.php';
@@ -50,6 +52,7 @@
 	require_once APP_PATH . '_lib/class.JobberSettings.php';
 	require_once APP_PATH . '_lib/class.FormValidator.php';
 	require_once APP_PATH . '_lib/smarty/libs/Smarty.class.php';
+
 
 	// Setup database connection
 	try 
@@ -97,8 +100,6 @@
 	
 	// Setup translations
 	$translator = new Translator(LANG_CODE);
-
-	// Get translations from the DB, skip cache
 	//$translations = $translator->getTranslations();
 	
     if ($cache->testCache(CACHE_TRANSLATIONS . '_' . LANG_CODE))
@@ -118,10 +119,6 @@
 	$smarty->compile_dir = APP_PATH .'_tpl' . DIRECTORY_SEPARATOR . THEME . DIRECTORY_SEPARATOR . '_cache';
 	
 	
-	// Create Textile object
-	$textile = new Textile;
-
-
 	// Split URL - get parameters
 	$_app_info['params'] = array();
 	

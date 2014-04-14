@@ -23,18 +23,28 @@ class JobApplication
 	public function Apply($ip)
 	{
 		global $db;
+		global $settings;
 		
-		$sql = 'INSERT INTO '.DB_PREFIX.'job_applications (job_id, created_on, ip, name, email, message, cv_path)
-		                    VALUES (' . $this->mJobId . ', NOW(), "' . $ip . '",
+		$sql = 'INSERT INTO '.DB_PREFIX.'job_applications (job_id, name, email, cv_path, message, created_on, ip)
+		                    VALUES (' . $this->mJobId . ',
                                 "' . $this->mData['apply_name'] . '", "' . $this->mData['apply_email'] . '", 
-                                "' . $this->mData['apply_msg'] . '", "' . $this->mData['attachment_filename'] . '")';
+                                "' . ($settings['keep_uploaded_cvs'] ? $this->mData['attachment_filename'] : '') . '",
+                                "' . $this->mData['apply_msg'] . '",  NOW(), "' . $ip . '")';
 		$db->query($sql);
 	}
 	
-	public function getAllForJob()
+	public function getAllForJob($from=false, $to=false)
 	{
 		global $db;
-		$sql = 'SELECT * FROM '.DB_PREFIX.'job_applications WHERE job_id = ' . $this->mJobId;
+		if ((int)$from >= 0 && (int)$to > 0)
+		{
+			$sql_limit = ' LIMIT ' . (int)$from .', ' . (int)$to;
+		}
+		else
+		{
+			$sql_limit = '';
+		}
+		$sql = 'SELECT * FROM '.DB_PREFIX.'job_applications WHERE job_id = ' . $this->mJobId . $sql_limit;
 		$result = $db->QueryArray($sql);
 		return $result;
 	}

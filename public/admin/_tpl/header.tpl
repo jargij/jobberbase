@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="{$BASE_URL_ADMIN}_tpl/css/superfish.css" type="text/css" media="screen" /> 
 	<link rel="stylesheet" href="{$BASE_URL_ADMIN}_tpl/css/superfish-navbar.css" type="text/css" media="screen" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
-	<script src="{$BASE_URL_ADMIN}_tpl/js/jquery.bgiframe.min.js" type="text/javascript"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="{$BASE_URL_ADMIN}_tpl/js/jquery.validate.min.js" type="text/javascript"></script>
 	<script src="{$BASE_URL_ADMIN}_tpl/js/functions.js" type="text/javascript"></script>
 	<script src="{$BASE_URL_ADMIN}_tpl/js/main.js" type="text/javascript"></script>
@@ -27,8 +27,7 @@
 	<script src="{$BASE_URL_ADMIN}_tpl/js/jquery.fancybox-1.2.6.pack.js" type="text/javascript"></script>
 	<script src="{$BASE_URL_ADMIN}_tpl/js/jquery.easing.1.3.js" type="text/javascript"></script>
 	{if $editor}
-	<script src="{$BASE_URL_ADMIN}_tpl/js/tiny_mce/tiny_mce.js" type="text/javascript"></script>
-	<script src="{$BASE_URL_ADMIN}_tpl/js/editor.js" type="text/javascript"></script>
+	<script src="{$BASE_URL}js/tiny_mce/tiny_mce.js" type="text/javascript"></script>
 	{/if}
 </head>
 
@@ -74,11 +73,9 @@
 		<li><a {if $CURRENT_PAGE == 'types'}class="selected"{/if} href="{$BASE_URL_ADMIN}types/">Job types</a></li>
 		<li><a {if $CURRENT_PAGE == 'links'}class="selected"{/if} href="{$BASE_URL_ADMIN}links/">Links</a>
 		<ul>
-		<li><a href="{$BASE_URL_ADMIN}links/primary/">Primary Menu</a></li>
-		<li><a href="{$BASE_URL_ADMIN}links/secondary/">Secondary Menu</a></li>
-		<li><a href="{$BASE_URL_ADMIN}links/footer1/">Footer Column 1</a></li>
-		<li><a href="{$BASE_URL_ADMIN}links/footer2/">Footer Column 2</a></li>
-		<li><a href="{$BASE_URL_ADMIN}links/footer3/">Footer Column 3</a></li>
+			{foreach from=$menus item=menu name=menus}
+			<li><a href="{$BASE_URL_ADMIN}links/{$menu.varname}/">{$menu.name}</a></li>
+			{/foreach}
 		</ul>
 		</li>
 		</ul>

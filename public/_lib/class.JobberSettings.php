@@ -45,6 +45,23 @@ class JobberSettings
 				}
 				$input_options = $themes;
 			}
+			else if ($input_type == 'available_pages')
+			{
+				$input_type = 'select';
+				$pages = array('');
+				$sql = '
+					SELECT url 
+					FROM '.DB_PREFIX.'pages 
+					ORDER BY url ASC';
+				if ($resultPages = $db->query($sql))
+				{
+					while ($resultRow = $resultPages->fetch_assoc())
+					{
+						$pages[] = $resultRow['url'];
+					}
+				}
+				$input_options = $pages;
+			}
 			else if ($input_type == 'timezones')
 			{
 				$input_type = 'select';	

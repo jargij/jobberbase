@@ -30,7 +30,7 @@
 							{section name=tmp2 loop=$types}
 							<div>
 								<label for="type_id_{$types[tmp2].id}">
-									<input class="no-border" type="radio" name="type_id" id="type_id_{$types[tmp2].id}" value="{$types[tmp2].id}" {if !$job.type_id && !$smarty.post.type_id}{if $types[tmp2].id == 1}checked="checked"{/if}{else}{if $types[tmp2].id == $job.type_id}checked="checked"{/if}{if $types[tmp2].id == $smarty.post.type_id}checked="checked"{/if}{/if} />
+									<input class="no-border" type="radio" name="type_id" id="type_id_{$types[tmp2].id}" value="{$types[tmp2].id}" {if !$job.type_id && !$smarty.post.type_id}{if $types[tmp2].id == 1}checked="checked"{/if}{else}{if $types[tmp2].id == $job.type_id}checked="checked"{else}{if $types[tmp2].id == $smarty.post.type_id}checked="checked"{/if}{/if}{/if} />
 									<img src="{$BASE_URL}_tpl/{$THEME}/img/icon-{$types[tmp2].var_name}.png" alt="{$types[tmp2].name}" />
 								</label>
 							</div>
@@ -40,7 +40,7 @@
 							<label>Category</label>
 							<select name="category_id" id="category_id" class="ml1">
 							{section name=tmp1 loop=$categories}
-								<option value="{$categories[tmp1].id}" {if $default_categ_id != '' && $default_categ_id == $categories[tmp1].id}selected="selected"{else}{if $categories[tmp1].id == $job.category_id}selected="selected"{/if}{if $categories[tmp1].id == $smarty.post.category_id}selected="selected"{/if}{/if}>{$categories[tmp1].name}</option>
+								<option value="{$categories[tmp1].id}" {if $default_categ_id != '' && $default_categ_id == $categories[tmp1].id}selected="selected"{else}{if $categories[tmp1].id == $job.category_id}selected="selected"{else}{if $categories[tmp1].id == $smarty.post.category_id}selected="selected"{/if}{/if}{/if}>{$categories[tmp1].name}</option>
 							{/section}
 							</select>
 						</div>
@@ -48,6 +48,11 @@
 							<label for="title">{$translations.publish.title_label}</label>
 							<input type="text" name="title" id="title" size="50" value="{if $job.title}{$job.title|escape}{else}{$smarty.post.title|escape}{/if}" />
 							<div class="{$translations.publish.title_info}"></div>
+						</div>
+						<div class="group">
+							<label for="summary">{$translations.publish.summary_label}</label>
+							<input type="text" name="summary" id="summary" size="50" value="{if $job.summary}{$job.summary|escape}{else}{$smarty.post.summary|escape}{/if}" />
+							<div class="{$translations.publish.summary_info}"></div>
 						</div>
 						<div class="group">
 							<label for="city_id">{$translations.publish.location_label}</label>
@@ -65,59 +70,7 @@
 						</div>
 						<div class="group{if $errors.description} error{/if}">
 							<label for="description">{$translations.publish.description_label}</label>
-							<textarea name="description" id="description" cols="80" rows="15">{if $job.description}{$job.description}{else}{$smarty.post.description}{/if}</textarea>
-							<div class="suggestion">
-								<a target="_blank" href="http://www.textism.com/tools/textile/" onclick="$('#textile-suggestions').toggle(); return false;">{$translations.publish.description_info}</a>
-							</div>
-							<div id="textile-suggestions" style="display: none;">
-								<table>
-									<thead>
-										<tr class="odd">
-											<th>{$translations.publish.syntax}</th>
-											<th>{$translations.publish.result}</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="even">
-											<td>That is _incredible_</td>
-											<td>That is <em>incredible</em></td>
-	
-										</tr>
-										<tr class="odd">
-											<td>*Indeed* it is</td>
-											<td><strong>Indeed</strong> it is</td>
-										</tr>
-										<tr class="even">
-											<td>"Wikipedia":http://www.wikipedia.org</td>
-	
-											<td><a href="http://www.wikipedia.org">Wikipedia</a></td>
-										</tr>
-										<tr class="odd">
-											<td>* apples<br />* oranges<br />* pears</td>
-											<td>
-	
-												<ul>
-													<li>apples</li>
-													<li>oranges</li>
-													<li>pears</li>
-												</ul>
-											</td>
-										</tr>
-	
-										<tr class="even">
-											<td># first<br /># second<br /># third</td>
-											<td>
-												<ol>
-													<li>first</li>
-													<li>second</li>
-	
-													<li>third</li>
-												</ol>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div><!-- #textile-suggestions -->
+							<textarea name="description" id="description" class="mceEditor" cols="70" rows="15">{if $job.description}{$job.description}{else}{$smarty.post.description}{/if}</textarea>
 						</div>
 					</div>
 				</div>
@@ -125,14 +78,14 @@
 				<div id="company_info" class="left span1 block last">
 					<h3>{$translations.publish.company}</h3>
 					<div class="block_inner">
-						<div class="group{if $errors.company} error{/if}">
+						<div class="group">
 							<label for="company">{$translations.publish.name_label}</label>
 							<input type="text" name="company" id="company" size="30" value="{if $job.company}{$job.company|escape}{else}{$smarty.post.company|escape}{/if}" />
 						</div>
 
 						<div class="group">
 							<label for="url">{$translations.publish.website_label}</label>
-							<em>http://</em><input type="text" name="url" id="url" size="25" value="{if $job.company}{$job.url}{else}{$smarty.post.url}{/if}" />
+							<em>http://</em><input type="text" name="url" id="url" size="25" value="{if $job.url}{$job.url}{else}{$smarty.post.url}{/if}" />
 							<div class="suggestion">{$translations.publish.website_info}</div>
 						</div>
 	
@@ -160,21 +113,19 @@
 		
 		{literal}
 		<script type="text/javascript">
+			jobberBase.editor.init(false);
 			$(document).ready(function()
 			{
 				$('#type_id_1').focus();
 				
 				$("#publish_form").validate({
 					rules: {
-						company: { required: true },
 						title: { required: true },
 						description: { required: true },
 						poster_email: { required: true, email: true }
 					},
 					messages: {
-						company: '',
 						title: '',
-						location: '',
 						description: '',
 						poster_email: ''
 					}
